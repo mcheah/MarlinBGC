@@ -95,7 +95,7 @@ def main(argv) :
 	BAUDRATE = argv[1]
 	FILENAME = argv[2]
 	ser_obj = serial.Serial(COMPORT,BAUDRATE,timeout=10000,writeTimeout=10000,parity=serial.PARITY_NONE)
-	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME)
+	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME,linetimeout=0)
 	ser_obj.close()
 if __name__ == "__main__":
     main(sys.argv[1:])

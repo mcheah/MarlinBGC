@@ -37,7 +37,7 @@ class WorkerThread(Thread):
         self.comport = comport
     def run(self) :
         # M35_sendBinGcode(None,BAUDRATE,self.filename,self.comList.GetValue(),progHandle=self.onProg)
-        M35_sendBinGcode(None,BAUDRATE,self.filepath,comport=self.comport,progHandle=self.progHandle,linetimeout=0,linetimeoutmod=50)
+        M34_sendBinGcode(None,BAUDRATE,self.filepath,comport=self.comport,progHandle=self.progHandle,linetimeout=0,linetimeoutmod=50)
     def abort(self) :
         self._want_abort = 1
 class MyFrame(wx.Frame) :
