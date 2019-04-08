@@ -3,6 +3,41 @@ import time
 import sys
 import os
 from math import floor
+
+class progFileHandler() :
+	def __init__(self,filename) :
+		self.filename = filename
+	def updateProgFile(self,percent) :
+		if(percent<1.0) :
+			file = open(self.filename,'w')
+			file.write(str(int(percent*100)))
+			file.close()
+		elif(os.path.exists(self.filename)) :
+			os.remove(self.filename)
+
+class fakeSerial() :
+	def __init__(self) :
+		self.inputPath = 'infile.txt'
+		self.outputPath = 'outfile.txt'
+		self.inputFile = open(self.inputPath,'r')
+		self.outputFile = open(self.outputPath,'w')
+		self._in_waiting = 0
+	def write(self,stream) :
+		self.outputFile.write(stream.decode())
+	def read(self,stream) :
+		return self.inputFile.read(stream).encode()
+	def readline(self) :
+		return self.inputFile.readline().encode()
+	@property
+	def in_waiting(self):
+		pos = self.inputFile.tell()
+		numbytes = self.inputFile.readline()
+		self.inputFile.seek(pos)
+		return len(numbytes)
+	def close(self) :
+		self.inputFile.close()
+		self.outputFile.close()
+
 def M34_sendBinGcode(ser_obj_in,baudrate,filename,comport='',linetimeout=0.010,linetimeoutmod=1,chunksize=512,progHandle=None) :
 	# if(not ser_obj.isOpen()) :
 		# ser_obj = serial.Serial(COMPORT,BAUDRATE,timeout=10000,writeTimeout=10000,parity=serial.PARITY_NONE)
@@ -89,13 +124,20 @@ def isDosName(filename) :
 
 def dosify(filename) : 
 	return os.path.split(filename)[1].split(".")[0][:8] + ".bgc"
-
 def main(argv) :
 	COMPORT = argv[0]
 	BAUDRATE = argv[1]
 	FILENAME = argv[2]
+	if(len(argv)>3) :
+		PROGNAME = argv[3]
+		progHandler = progFileHandler(PROGNAME)
+		PROGHANDLE = progHandler.updateProgFile
+	else :
+		PROGHANDLE = None
 	ser_obj = serial.Serial(COMPORT,BAUDRATE,timeout=10000,writeTimeout=10000,parity=serial.PARITY_NONE)
-	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME,linetimeout=0)
+	# ser_obj = fakeSerial()
+	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME,linetimeout=0.01,progHandle=PROGHANDLE)
 	ser_obj.close()
 if __name__ == "__main__":
     main(sys.argv[1:])
+

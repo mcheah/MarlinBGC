@@ -1,2 +1,4 @@
 *.spec
 *.pyc
+**/dist
+**/build
