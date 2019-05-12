@@ -7,13 +7,21 @@ from math import floor
 class progFileHandler() :
 	def __init__(self,filename) :
 		self.filename = filename
+		self.file = open(filename,'w')
 	def updateProgFile(self,percent) :
-		if(percent<1.0) :
-			file = open(self.filename,'w')
-			file.write(str(int(percent*100)))
-			file.close()
-		elif(os.path.exists(self.filename)) :
-			os.remove(self.filename)
+		try :
+			if(percent<1.0) :
+				self.file.seek(0)
+				self.file.write('%03d' % int(percent*100))
+				self.file.flush()
+			elif(os.path.exists(self.filename)) :
+				self.file.seek(0)				
+				self.file.write('%03d' % int(100))
+				self.file.flush()				
+				self.file.close()
+				os.remove(self.filename)
+		except :
+			pass
 
 class fakeSerial() :
 	def __init__(self) :
@@ -136,7 +144,7 @@ def main(argv) :
 		PROGHANDLE = None
 	ser_obj = serial.Serial(COMPORT,BAUDRATE,timeout=10000,writeTimeout=10000,parity=serial.PARITY_NONE)
 	# ser_obj = fakeSerial()
-	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME,linetimeout=0.01,progHandle=PROGHANDLE)
+	M34_sendBinGcode(ser_obj,BAUDRATE,FILENAME,linetimeout=0.00,progHandle=PROGHANDLE)
 	ser_obj.close()
 if __name__ == "__main__":
     main(sys.argv[1:])

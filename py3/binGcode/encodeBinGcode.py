@@ -1,4 +1,4 @@
-from .binGcode import *
+from binGcode.binGcode import *
 import copy
 import sys
 import os
@@ -7,7 +7,6 @@ def encodeGcodeFile(filename="coffee_hanger2D.gcode",filename_out="coffee_hanger
     file.seek(0)
     gcode = list()
     prevcmd = None
-    print('Hello')
     for line in file :
         cmd = gcodeCommand()
         isComment = not cmd.parseGcode(line)

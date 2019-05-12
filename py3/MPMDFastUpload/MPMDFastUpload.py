@@ -121,7 +121,7 @@ class MyFrame(wx.Frame) :
         # print([self.comList.GetValue(),BAUDRATE,self.filename])
         # _thread.start_new_thread(M35_sendBinGcode(None,BAUDRATE,self.filename,self.comList.GetValue(),progHandle=self.onProg))
         self.worker = WorkerThread(self,self.onProg,self.filename,self.comList.GetValue())
-        wx.CallAfter(self.worker.start())
+        wx.CallAfter(self.worker.start)
         # except:
             # pass
         # self.progBar.SetValue(self.progBar.GetValue()+5)
@@ -158,7 +158,7 @@ class MyFrame(wx.Frame) :
         # self.progBar.SetValue(value)
         self.Refresh()
         self.Update()
-        wx.Yield()
+        app.Yield()
         pass
     def onCheck(self,value) :
         if(value) :
