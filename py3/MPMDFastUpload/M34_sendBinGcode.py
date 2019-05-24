@@ -62,9 +62,24 @@ def M34_sendBinGcode(ser_obj_in,baudrate,filename,comport='',linetimeout=0.010,l
 	print("Starting")
 	print(t)
 	print('{:s}'.format(ser_obj.read(ser_obj.in_waiting).decode()))
+	ser_obj.flush()
+	ok = ''.encode()
+	while(ok != 'ok'.encode()) :
+		ser_obj.write('M29\r\n'.encode())
+		print(ok.decode())
+		ok = ser_obj.readline().rstrip()
+		print(time.time() - t)
+		if((time.time() - t) >10) :
+			print('Did not receive OK')
+			return
+		time.sleep(0.1)
+	print(ok.decode())			
+	ok = ser_obj.read(ser_obj.in_waiting)
+	print(ok.decode())
 	#M34filename = filename if(isDosName(filename)) else dosify(filename)
 	M34filename = filename
 	filesize = os.path.getsize(M34filename)
+	t = time.time()
 	ser_obj.write("M34 S{} !{}\n".format(filesize,os.path.split(M34filename)[1]).encode())
 	#ser_obj.write(("M34 "+os.path.split(M34filename)[1]+"\r\n").encode())
 	ok = ser_obj.readline().rstrip()

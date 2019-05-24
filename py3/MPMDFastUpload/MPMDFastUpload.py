@@ -4,9 +4,8 @@ import glob
 # import _thread
 from threading import Thread
 from M34_sendBinGcode import M34_sendBinGcode
-from binGcode.binGcode import *
-from binGcode.encodeBinGcode import encodeGcodeFile
-# from binGcode.encodeBinGcode import encodeGcodeFile
+# from binGcode.binGcode import *
+from binGcode2.encodeBinGcode import encodeGcodeFile
 # from binGcode.binGcode import *
 import wx.lib.agw.supertooltip as STT
 if os.name == "nt":
